@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;  
+import java.text.SimpleDateFormat;
 
 public class Venda {
     private Loja loja;
@@ -14,7 +14,8 @@ public class Venda {
     private String coo;
     private ArrayList<ItemVenda> itens;
     private Pagamento pagamento;
-    private Imposto imposto;       
+    private Imposto imposto;
+    private Operador operador;
 
     public Venda(Loja loja, Calendar DataHora, String ccf, String coo) {
         this.loja = loja;
@@ -22,14 +23,25 @@ public class Venda {
         this.ccf = ccf;
         this.coo = coo;
         this.itens = new ArrayList<ItemVenda>();
-        this.pagamento = new Pagamento(0);      
-    }
+        this.pagamento = new Pagamento(0);
+    }    
 
-    public Venda(Loja loja, Calendar DataHora, String ccf, String coo,Imposto imposto){
+    public Venda(Loja loja, Calendar DataHora, String ccf, String coo, Imposto imposto) {
         this(loja, DataHora, ccf, coo);
         this.imposto = imposto;
     }
-    
+    public Venda(Loja loja, Calendar DataHora, String ccf, String coo, Imposto imposto, Operador operador) {
+        this(loja, DataHora, ccf, coo,imposto);
+        this.operador = operador;
+    }
+
+    public Operador getOperador() {
+        return operador;
+    }
+
+    public void setOperador(Operador operador) {
+        this.operador = operador;
+    }    
     public Imposto getImposto() {
         return this.imposto;        
     }
@@ -153,6 +165,11 @@ public class Venda {
         return dados.toString();     
     }
 
+    public String dadosOperador(){
+        String dadosOperador = String.format("OPERADOR: %s",operador.getCodigo());
+        return dadosOperador;
+    }
+
     public String imprimirCupom(){        
 
         String BREAK = System.lineSeparator();
@@ -166,7 +183,9 @@ public class Venda {
         cupom.append("------------------------------"+ BREAK);
         cupom.append( String.format("TOTAL R$ %s",decimalFormat(calcularTotal()))+ BREAK);
         cupom.append(pagamento.imprimir()+BREAK);
-        cupom.append(dadosImposto());
+        cupom.append(dadosImposto()+BREAK);
+        cupom.append("------------------------------"+ BREAK);
+        cupom.append(dadosOperador());
         return cupom.toString();
     }
 

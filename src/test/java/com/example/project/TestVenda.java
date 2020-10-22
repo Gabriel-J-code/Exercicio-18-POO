@@ -145,7 +145,6 @@ public class TestVenda {
     //test pagamento 
     Double valorTotal = 12.74;
     Double pagamento = 20.00;
-    Double troco = 7.26;
     String tipoDinheiro = "Dinheiro";
     String tipoCredito = "Cartao de credito";
     String tipoDebito = "Cartao de debito";
@@ -244,6 +243,17 @@ public class TestVenda {
             assertEquals("Taxa estadual invalida", e.getMessage());
         }
     }
+    //TestVendaDadosOperador
+    String CODIGO_OPERADOR = "494715";
+    Operador OPERADOR = new Operador(CODIGO_OPERADOR);
+
+    String TEXTO_ESPERADO_VENDA_DADOS_OPERADOR = "OPERADOR: 494715";        
+    @Test
+    public void TestVendaDadosOperador(){
+        Venda venda = LOJA_COMPLETA.vender(datahora, ccf, coo);
+        venda.setOperador(OPERADOR);
+        assertEquals(TEXTO_ESPERADO_VENDA_DADOS_OPERADOR, venda.dadosOperador());
+    }
 
     //cupom complemento
     String TEXTO_ESPERADO_CUPOM_FISCAL = "Loja 1" + BREAK +
@@ -263,13 +273,16 @@ public class TestVenda {
     "TOTAL R$ 12.74" + BREAK +
     "Dinheiro 20.00" + BREAK +
     "Troco R$ 7.26" + BREAK +
-    "Lei 12.741, Valor aprox., Imposto F=0.96 (7.54%), E=0.61 (4.81%)";
+    "Lei 12.741, Valor aprox., Imposto F=0.96 (7.54%), E=0.61 (4.81%)" + BREAK +
+    "------------------------------" + BREAK +
+    "OPERADOR: 494715";
     @Test
     public void test_venda_imprimir_cupom(){
         Venda venda = LOJA_COMPLETA_COM_IMPOSTO.vender(datahora,ccf,coo);
         venda.adicionarItem(1,produto1,2);
         venda.adicionarItem(2,produto2,4);        
         venda.pagar(pagamento, tipoDinheiro);
+        venda.setOperador(OPERADOR);
         assertEquals(TEXTO_ESPERADO_CUPOM_FISCAL, venda.imprimirCupom());
     }
 }
